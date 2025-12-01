@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,13 +7,17 @@ public class PlayerController : MonoBehaviour
 
     //Componentes
     private CharacterController _controller;
-    //private Animator _animator;
+    private Animator _animator;
     private Transform _mainCamera;
 
     //Inputs
     public Vector2 _moveValue;
     private InputAction _moveAction;
     private InputAction _jumpAction;
+    private InputAction _interactAction;
+    private InputAction _healthPotionAction;
+    private InputAction _manaPotionAction;
+    private InputAction _dashAction;
     
     //Movimiento 
     private float _playerSpeed = 5;
@@ -23,16 +28,19 @@ public class PlayerController : MonoBehaviour
 
     //Suelo
     [Header("Ground")]
-    public Transform _sensor;
+    public Transform _sensorPosition;
     public LayerMask _groundLayer;
     public float _sensorRadius;
 
     //Gravedad
-    private float _gravity = -9.81f;
+    [Header("Gravity")]
     public Vector3 _playerGravity;
+    private float _gravity = -9.81f;
 
-    
-    
+    //Interact
+    [Header("Interact")]
+    public Transform _interactionPosition;
+    public Vector3 _interactionRadius;
 
     void Awake()
     {
@@ -41,6 +49,10 @@ public class PlayerController : MonoBehaviour
 
         _moveAction = InputSystem.actions["Move"];
         _jumpAction = InputSystem.actions["Jump"];
+        _interactAction = InputSystem.actions["Interact"];
+        _healthPotionAction = InputSystem.actions["Potions"];
+        _manaPotionAction = InputSystem.actions["Potions"];
+        _dashAction = InputSystem.actions["Dash"];
 
         _mainCamera = Camera.main.transform;
     }
@@ -48,9 +60,30 @@ public class PlayerController : MonoBehaviour
     {
         _moveValue = _moveAction.ReadValue<Vector2>();
 
+        //Acciones
         if (_jumpAction.WasPerformedThisFrame() && IsGrounded())
         {
             Jump();
+        }
+        if (_interactAction.WasPressedThisFrame())
+        {
+            Interact();
+        }
+        if(_dashAction.WasPressedThisFrame())
+        {
+            Dash();
+        }
+
+        //Pociones
+        if(_healthPotionAction.WasPressedThisFrame() && GameManager.instance.healthPotion > 0)
+        {
+            GameManager.instance.RestHealthPotion();
+            Debug.Log(GameManager.instance.healthPotion);    
+        }
+        if(_manaPotionAction.WasPressedThisFrame() && GameManager.instance.manaPotion > 0)
+        {
+            GameManager.instance.RestManaPotion();
+            Debug.Log(GameManager.instance.manaPotion);    
         }
 
         Movement();
@@ -79,7 +112,6 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-
         //_animator.SetBool("IsJumping", true);
         _playerGravity.y = Mathf.Sqrt(_playerForce * -2 * _gravity);
 
@@ -88,7 +120,6 @@ public class PlayerController : MonoBehaviour
     
     void Gravity()
     {
-
         if (!IsGrounded())
         {
             _playerGravity.y += _gravity * Time.deltaTime;
@@ -104,32 +135,52 @@ public class PlayerController : MonoBehaviour
 
     bool IsGrounded()
     {
-        return Physics.CheckSphere(_sensor.position, _sensorRadius, _groundLayer);
+        return Physics.CheckSphere(_sensorPosition.position, _sensorRadius, _groundLayer);
     }
 
-    void Hola()
+    void Interact()
     {
-        Collider[] objectsToGrab = Physics.OverlapBox(_hands.position, _handsSensorSize);
-        foreach (Collider item in objectsToGrab)
+        Collider[] objectsToGrab = Physics.OverlapBox(_interactionPosition.position, _interactionRadius);
+            foreach (Collider item in objectsToGrab)
             {
-                IIteratable iteratableObject = item.GetComponent<IGrabeable>();
-
-                if (grabeableObject != null)
+                if(item.gameObject.layer == LayerMask.NameToLayer("Interactable"))
                 {
-                    _grabedObject = item.transform;
-                    _grabedObject.SetParent(_hands);
-                    _grabedObject.position = _hands.position;
-                    _grabedObject.rotation = _hands.rotation;
-                    _grabedObject.GetComponent<Rigidbody>().isKinematic = true;
-
-                    return;
+                    IInteractable interactableObject = item.GetComponent<IInteractable>();
+                    if(interactableObject != null)
+                    {
+                        interactableObject.Interact(); 
+                    }
                 }
             }
     }
 
+    void Dash()
+    {
+        _controller.Move(Vector3.forward);    
+    }
+
+    /*IEnumerator Dash()
+    {
+        isDashing = true;
+        float startTime = Time.time;
+
+        while (Time.time < startTime + _dashTime)
+        {
+            //Temporalmente para sacar el movimiento
+            //Vector3 direction = new Vector3(_moveValue.x, 0, _moveValue.y);
+            _characterController.Move(_lastMoveDirection * _dashSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        isDashing = false;
+    }*/
+
     void OnDrawGizmos()
     {
-       Gizmos.color = Color.white;
-       Gizmos.DrawWireSphere(_sensor.position, _sensorRadius); 
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(_sensorPosition.position, _sensorRadius);
+
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireCube(_interactionPosition.position, _interactionRadius);
     }
 }

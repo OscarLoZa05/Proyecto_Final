@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Chest : MonoBehaviour, IIteratable
+public class Chest : MonoBehaviour, IInteractable
 {
     void Update()
     {
@@ -9,6 +9,9 @@ public class Chest : MonoBehaviour, IIteratable
 
     public void Interact()
     {
-        Debug.Log("Hola");
+        GameManager.instance.AddHealthPotion();
+        Debug.Log("Health Potion: " + GameManager.instance.healthPotion);
+        GameManager.instance.AddManaPotion();
+        Debug.Log("Health Potion: " + GameManager.instance.manaPotion);
     }
 }
