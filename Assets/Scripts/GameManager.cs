@@ -31,20 +31,12 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void AddManaPotion()
+    public void ManaPotion(int used)
     {
-        manaPotion ++;
+        manaPotion += used;
     }
-    public void AddHealthPotion()
+    public void HealthPotion(int used)
     {
-        healthPotion ++;
-    }
-    public void RestManaPotion()
-    {
-        manaPotion --;
-    }
-    public void RestHealthPotion()
-    {
-        healthPotion --;
+        healthPotion += used;
     }
 }

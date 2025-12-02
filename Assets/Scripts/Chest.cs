@@ -9,9 +9,9 @@ public class Chest : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        GameManager.instance.AddHealthPotion();
+        GameManager.instance.HealthPotion(1);
         Debug.Log("Health Potion: " + GameManager.instance.healthPotion);
-        GameManager.instance.AddManaPotion();
+        GameManager.instance.ManaPotion(1);
         Debug.Log("Health Potion: " + GameManager.instance.manaPotion);
     }
 }

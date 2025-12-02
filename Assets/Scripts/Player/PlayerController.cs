@@ -15,9 +15,9 @@ public class PlayerController : MonoBehaviour
     private InputAction _moveAction;
     private InputAction _jumpAction;
     private InputAction _interactAction;
-    private InputAction _healthPotionAction;
-    private InputAction _manaPotionAction;
-    private InputAction _dashAction;
+    private InputAction _ability1;
+
+    //private InputAction _dashAction;
     
     //Movimiento 
     private float _playerSpeed = 5;
@@ -50,9 +50,8 @@ public class PlayerController : MonoBehaviour
         _moveAction = InputSystem.actions["Move"];
         _jumpAction = InputSystem.actions["Jump"];
         _interactAction = InputSystem.actions["Interact"];
-        _healthPotionAction = InputSystem.actions["Potions"];
-        _manaPotionAction = InputSystem.actions["Potions"];
-        _dashAction = InputSystem.actions["Dash"];
+        _ability1 = InputSystem.actions["WaterWave"];
+        //_dashAction = InputSystem.actions["Dash"];
 
         _mainCamera = Camera.main.transform;
     }
@@ -69,22 +68,16 @@ public class PlayerController : MonoBehaviour
         {
             Interact();
         }
-        if(_dashAction.WasPressedThisFrame())
+        /*if(_dashAction.WasPressedThisFrame())
         {
             Dash();
+        }*/
+        if(_ability1.WasPressedThisFrame())
+        {
+            Empuje();
         }
 
-        //Pociones
-        if(_healthPotionAction.WasPressedThisFrame() && GameManager.instance.healthPotion > 0)
-        {
-            GameManager.instance.RestHealthPotion();
-            Debug.Log(GameManager.instance.healthPotion);    
-        }
-        if(_manaPotionAction.WasPressedThisFrame() && GameManager.instance.manaPotion > 0)
-        {
-            GameManager.instance.RestManaPotion();
-            Debug.Log(GameManager.instance.manaPotion);    
-        }
+        
 
         Movement();
 
@@ -154,10 +147,38 @@ public class PlayerController : MonoBehaviour
             }
     }
 
-    void Dash()
+    private float maxDistance = 10;
+    private float _playerForceImpulse = 5;
+    //public Transform enemigos;
+
+    void Empuje()
+    {
+        Collider[] enemies = Physics.OverlapSphere(transform.position, maxDistance);
+            foreach (Collider enemy in enemies)
+            {
+                if(enemy.transform.gameObject.layer == 7)
+                {
+                    Rigidbody _enemyRigidBody = enemy.GetComponent<Rigidbody>();
+
+                    Vector3 directionToEnemy = (enemy.transform.position - transform.position).normalized;
+
+                    float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+                    float forceMultiplier = Mathf.Clamp01(1 - (distanceToEnemy / maxDistance));
+
+                    //float distanceNeeded = maxDistance - distanceToEnemy;
+                    //float impulseNeeded = (distanceNeeded)
+
+                    _enemyRigidBody.AddForce(directionToEnemy * distanceToEnemy * _playerForceImpulse, ForceMode.Impulse);
+
+                    Debug.Log(directionToEnemy * distanceToEnemy * _playerForceImpulse);
+                }
+            }
+    }
+
+    /*void Dash()
     {
         _controller.Move(Vector3.forward);    
-    }
+    }*/
 
     /*IEnumerator Dash()
     {
@@ -182,5 +203,8 @@ public class PlayerController : MonoBehaviour
 
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireCube(_interactionPosition.position, _interactionRadius);
+
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, maxDistance);
     }
 }

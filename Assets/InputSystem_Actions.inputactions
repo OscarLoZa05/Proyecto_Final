@@ -87,9 +87,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Potions",
+                    "name": "PotionsHealth",
                     "type": "Button",
                     "id": "b91678d7-f378-4c6a-89ec-028ab76b3313",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PotionsMana",
+                    "type": "Button",
+                    "id": "9980bcbe-d1e6-462b-b944-6eb1dd81806b",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -99,6 +108,15 @@
                     "name": "Dash",
                     "type": "Button",
                     "id": "e11a767c-c046-43a8-8418-a00a25d6aa05",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "WaterWave",
+                    "type": "Button",
+                    "id": "e546a312-0479-4f41-91ea-bded642a1f73",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -498,18 +516,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Potions",
+                    "action": "PotionsHealth",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "09e101cb-4bcd-4a31-855f-05a335340776",
+                    "id": "33e6f508-3dd8-4119-b630-62b7be0101ee",
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Potions",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "PotionsMana",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -521,6 +539,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d14a433c-2c53-4474-8891-a833056fccd0",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "WaterWave",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
