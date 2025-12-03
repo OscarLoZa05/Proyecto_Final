@@ -148,7 +148,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private float maxDistance = 10;
-    private float _playerForceImpulse = 5;
+    private float _playerForceImpulse = 10;
     //public Transform enemigos;
 
     void Empuje()
@@ -167,10 +167,15 @@ public class PlayerController : MonoBehaviour
 
                     //float distanceNeeded = maxDistance - distanceToEnemy;
                     //float impulseNeeded = (distanceNeeded)
+                    directionToEnemy.y = 0;
 
-                    _enemyRigidBody.AddForce(directionToEnemy * distanceToEnemy * _playerForceImpulse, ForceMode.Impulse);
+                    Vector3 force = (directionToEnemy * forceMultiplier);
 
-                    Debug.Log(directionToEnemy * distanceToEnemy * _playerForceImpulse);
+                    _enemyRigidBody.AddForce(0, 2, 0, ForceMode.Impulse);
+                    _enemyRigidBody.AddForce(force * _playerForceImpulse, ForceMode.Impulse);
+                    
+
+                    Debug.Log(force);
                 }
             }
     }
