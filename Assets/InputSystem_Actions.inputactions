@@ -121,6 +121,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "WaterState",
+                    "type": "Button",
+                    "id": "d5c9db09-3deb-458b-9bcc-2997b01a47fb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -534,10 +543,10 @@
                 {
                     "name": "",
                     "id": "3ed34a60-00f2-4d43-9e42-05837d80729d",
-                    "path": "",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -550,6 +559,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "WaterWave",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "829e8452-bf17-4cf1-867a-a4e0c70eb101",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "WaterState",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

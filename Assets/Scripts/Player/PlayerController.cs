@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     private InputAction _jumpAction;
     private InputAction _interactAction;
     private InputAction _ability1;
+    private InputAction _ability2;
 
     //private InputAction _dashAction;
     
@@ -25,6 +26,9 @@ public class PlayerController : MonoBehaviour
     private float _pushForce = 10;
     private float _smoothTime = 0.2f;
     private float _turnSmoothVelocity;
+    public float _speed;
+    public float _speedChangeRate = 10;
+    public float targetAngle;
 
     //Suelo
     [Header("Ground")]
@@ -42,6 +46,15 @@ public class PlayerController : MonoBehaviour
     public Transform _interactionPosition;
     public Vector3 _interactionRadius;
 
+    //Jump
+    [Header("Jump")]
+    public float jumpTimeOut = 0.5f;
+    public float fallTimeOut = 0.15f; 
+    public float _jumpHeight = 2f;
+    
+    float _jumpTimeOutDelta;
+    float _fallTimeOutDelta;
+
     void Awake()
     {
         _controller = GetComponent<CharacterController>();
@@ -51,6 +64,7 @@ public class PlayerController : MonoBehaviour
         _jumpAction = InputSystem.actions["Jump"];
         _interactAction = InputSystem.actions["Interact"];
         _ability1 = InputSystem.actions["WaterWave"];
+        _ability2 = InputSystem.actions["WaterState"];
         //_dashAction = InputSystem.actions["Dash"];
 
         _mainCamera = Camera.main.transform;
@@ -74,7 +88,11 @@ public class PlayerController : MonoBehaviour
         }*/
         if(_ability1.WasPressedThisFrame())
         {
-            Empuje();
+            WaveAbility();
+        }
+        if(_ability2.WasPressedThisFrame())
+        {
+            StartCoroutine(ScaleAbility());
         }
 
         
@@ -86,44 +104,89 @@ public class PlayerController : MonoBehaviour
 
     void Movement()
     {
-      Vector3 direction = new Vector3(_moveValue.x, 0, _moveValue.y);
+        Vector3 direction = new Vector3(_moveValue.x, 0, _moveValue.y);
 
-        /*_animator.SetFloat("Vertical", direction.magnitude);
-        _animator.SetFloat("Horizontal", 0);*/
+
+
+        float targetSpeed = _playerSpeed;
+        
+        if(direction == Vector3.zero)
+        {
+            targetSpeed = 0;
+        }
+
+        
+
+        float currentSpeed = new Vector3(_controller.velocity.x, 0, _controller.velocity.z).magnitude;
+        float speedOffset = 0.1f;
+
+        if(currentSpeed < targetSpeed - speedOffset || currentSpeed > targetSpeed + speedOffset)
+        {
+            _speed = Mathf.Lerp(currentSpeed, targetSpeed * direction.magnitude, Time.deltaTime * _speedChangeRate);
+            _speed = Mathf.Round(_speed * 1000f) / 1000f;
+        }
+        else
+        {
+            _speed = targetSpeed;
+        }
 
         if (direction != Vector3.zero)
         {
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _mainCamera.eulerAngles.y;
+            targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _mainCamera.eulerAngles.y;
             float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, _smoothTime);
             transform.rotation = Quaternion.Euler(0, smoothAngle, 0);
+        }
 
-            Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
-
-            _controller.Move(moveDirection.normalized * _playerSpeed * Time.deltaTime);
-        }   
+        Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
+        _controller.Move(_speed * Time.deltaTime * moveDirection.normalized  + _playerGravity * Time.deltaTime);
+        
     }
 
-    void Jump()
+        void Jump()
     {
-        //_animator.SetBool("IsJumping", true);
-        _playerGravity.y = Mathf.Sqrt(_playerForce * -2 * _gravity);
-
-        _controller.Move(_playerGravity * Time.deltaTime);
+        if(_jumpTimeOutDelta <= 0)
+        {
+           // _animator.SetBool("Jump", true);
+            _playerGravity.y = Mathf.Sqrt(_jumpHeight * -2 * _gravity);
+        }
+        //_controller.Move(_playerGravity * Time.deltaTime);
     }
-    
+
     void Gravity()
     {
-        if (!IsGrounded())
+        //_animator.SetBool("Grounded", IsGrounded());
+
+        if(IsGrounded())
         {
+            _fallTimeOutDelta = fallTimeOut;
+            
+            //_animator.SetBool("Jump", false);
+            //_animator.SetBool("Fall", false);
+            if(_playerGravity.y < 0)
+            {
+                _playerGravity.y = -2;
+            }
+
+            if(_jumpTimeOutDelta >= 0)
+            {
+                _jumpTimeOutDelta -= Time.deltaTime;
+            }
+        }
+        else
+        {
+            _jumpTimeOutDelta = jumpTimeOut;
+
+            if(_fallTimeOutDelta >= 0)
+            {
+                _fallTimeOutDelta -= Time.deltaTime;
+            }
+            else
+            {
+                //_animator.SetBool("Fall", true);
+            }
+            
             _playerGravity.y += _gravity * Time.deltaTime;
         }
-        else if (IsGrounded() && _playerGravity.y < 0)
-        {
-            //_animator.SetBool("IsJumping", false);
-            _playerGravity.y = -9.81f;
-        }
-
-        _controller.Move(_playerGravity * Time.deltaTime);
     }
 
     bool IsGrounded()
@@ -147,11 +210,11 @@ public class PlayerController : MonoBehaviour
             }
     }
 
-    private float maxDistance = 10;
-    private float _playerForceImpulse = 10;
+    private float maxDistance = 20;
+    private float _playerForceImpulse = 30;
     //public Transform enemigos;
 
-    void Empuje()
+    void WaveAbility()
     {
         Collider[] enemies = Physics.OverlapSphere(transform.position, maxDistance);
             foreach (Collider enemy in enemies)
@@ -180,6 +243,14 @@ public class PlayerController : MonoBehaviour
             }
     }
 
+    IEnumerator ScaleAbility()
+    {
+        Debug.Log("HOla");
+        _playerSpeed = 20;
+        yield return new WaitForSeconds(5);
+        _playerSpeed = 5;
+    }
+
     /*void Dash()
     {
         _controller.Move(Vector3.forward);    
@@ -200,6 +271,11 @@ public class PlayerController : MonoBehaviour
 
         isDashing = false;
     }*/
+
+    /*void Dash()
+    {
+        _controller.Move()
+    }*/
 
     void OnDrawGizmos()
     {
