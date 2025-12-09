@@ -53,9 +53,10 @@ public class PlayerController : MonoBehaviour
     float _fallTimeOutDelta;
 
     [Header("Bars")]
-    public int manaBar = 100;
-    public int maxHealthBar = 100;
-    public int currenthealthBar = 50;
+    public float currentManaBar = 100;
+    public float maxManaBar = 100;
+    public float maxHealthBar = 100;
+    public float currentHealthBar = 50;
 
     void Awake()
     {
@@ -201,7 +202,7 @@ public class PlayerController : MonoBehaviour
         Collider[] objectsToGrab = Physics.OverlapBox(_interactionPosition.position, _interactionRadius);
             foreach (Collider item in objectsToGrab)
             {
-                if(item.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+                if(item.gameObject.layer == 7)
                 {
                     IInteractable interactableObject = item.GetComponent<IInteractable>();
                     if(interactableObject != null)

@@ -14,6 +14,8 @@ public class PlayerAbility : MonoBehaviour
 
     //Canvas
     [Header("Canvas")]
+    public Image manaBarImage;
+
     public Image imageAbility1;
     public Image imageAbility2;
     public Image imageAbility3;
@@ -36,6 +38,7 @@ public class PlayerAbility : MonoBehaviour
     [Header("Ability3")]
     public float cooldownAbility3 = 10;
     public float currentCooldown3 = 10;
+    public int chargeAbility;
     public bool ability3Used = false;
 
 
@@ -56,7 +59,7 @@ public class PlayerAbility : MonoBehaviour
 
         //fireAttackRange  = transform.rotation * rangeAttack;
 
-        if(_ability1.WasPressedThisFrame() && ability1Used == false && _playerController.manaBar >= 15)
+        if(_ability1.WasPressedThisFrame() && ability1Used == false && _playerController.currentManaBar >= 15)
         {
             WaveAttack();
             ManaUsed(15);
@@ -64,7 +67,7 @@ public class PlayerAbility : MonoBehaviour
             currentCooldown1 = 0;
             imageAbility1.fillAmount = 0;
         }
-        if(_ability2.WasPressedThisFrame() && ability2Used == false && _playerController.manaBar >= 20)
+        if(_ability2.WasPressedThisFrame() && ability2Used == false && _playerController.currentManaBar >= 20)
         {
             StartCoroutine(WaterState());
             ManaUsed(25);
@@ -72,7 +75,7 @@ public class PlayerAbility : MonoBehaviour
             currentCooldown2 = 0;
             imageAbility2.fillAmount = 0;
         }
-        if(_ability3.WasPressedThisFrame() && ability3Used == false && _playerController.manaBar >= 50)
+        if(_ability3.WasPressedThisFrame() && ability3Used == false && _playerController.currentManaBar >= 50)
         {
             StartCoroutine(FireState());
             ManaUsed(50);
@@ -176,10 +179,10 @@ public class PlayerAbility : MonoBehaviour
 
     IEnumerator FireState()
     {
-        for (int i = 0; i < 5; i++)
+        for (chargeAbility = 0; chargeAbility <= 4; chargeAbility++)
         {
-            _playerController.currenthealthBar += 10;
-            _playerController.currenthealthBar = Mathf.Clamp(_playerController.currenthealthBar, 0, _playerController.maxHealthBar);
+            _playerController.currentHealthBar += 10;
+            _playerController.currentHealthBar = Mathf.Clamp(_playerController.currentHealthBar, 0, _playerController.maxHealthBar);
             yield return new WaitForSeconds(2);
             
         }
@@ -187,8 +190,16 @@ public class PlayerAbility : MonoBehaviour
 
     void ManaUsed(int ManaWasted)
     {
-        _playerController.manaBar -= ManaWasted;
+        _playerController.currentManaBar -= ManaWasted;
+        
+        UpdateManaBar();
     }
+    public void UpdateManaBar()
+    {
+        float currentManaBar = _playerController.currentManaBar / _playerController.maxManaBar;
+        manaBarImage.fillAmount = currentManaBar;
+    }
+
 
     void OnDrawGizmos()
     {
