@@ -15,13 +15,10 @@ public class PlayerController : MonoBehaviour
     private InputAction _moveAction;
     private InputAction _jumpAction;
     private InputAction _interactAction;
-    private InputAction _ability1;
-    private InputAction _ability2;
-
     //private InputAction _dashAction;
     
     //Movimiento 
-    private float _playerSpeed = 5;
+    public float _playerSpeed = 5;
     private float _playerForce = 2;
     private float _pushForce = 10;
     private float _smoothTime = 0.2f;
@@ -55,6 +52,11 @@ public class PlayerController : MonoBehaviour
     float _jumpTimeOutDelta;
     float _fallTimeOutDelta;
 
+    [Header("Bars")]
+    public int manaBar = 100;
+    public int maxHealthBar = 100;
+    public int currenthealthBar = 50;
+
     void Awake()
     {
         _controller = GetComponent<CharacterController>();
@@ -63,8 +65,6 @@ public class PlayerController : MonoBehaviour
         _moveAction = InputSystem.actions["Move"];
         _jumpAction = InputSystem.actions["Jump"];
         _interactAction = InputSystem.actions["Interact"];
-        _ability1 = InputSystem.actions["WaterWave"];
-        _ability2 = InputSystem.actions["WaterState"];
         //_dashAction = InputSystem.actions["Dash"];
 
         _mainCamera = Camera.main.transform;
@@ -86,14 +86,14 @@ public class PlayerController : MonoBehaviour
         {
             Dash();
         }*/
-        if(_ability1.WasPressedThisFrame())
+        /*if(_ability1.WasPressedThisFrame())
         {
             WaveAbility();
         }
         if(_ability2.WasPressedThisFrame())
         {
             StartCoroutine(ScaleAbility());
-        }
+        }*/
 
         
 
@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour
         Gravity();
     }
 
+    private float _smoothSpeed = 0f;
     void Movement()
     {
         Vector3 direction = new Vector3(_moveValue.x, 0, _moveValue.y);
@@ -117,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
         
 
-        float currentSpeed = new Vector3(_controller.velocity.x, 0, _controller.velocity.z).magnitude;
+        /*float currentSpeed = new Vector3(_controller.velocity.x, 0, _controller.velocity.z).magnitude;
         float speedOffset = 0.1f;
 
         if(currentSpeed < targetSpeed - speedOffset || currentSpeed > targetSpeed + speedOffset)
@@ -128,7 +129,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             _speed = targetSpeed;
-        }
+        }*/
+        _speed = Mathf.SmoothDamp(_speed, targetSpeed * direction.magnitude, ref _smoothSpeed, 0.1f);
 
         if (direction != Vector3.zero)
         {
@@ -214,7 +216,7 @@ public class PlayerController : MonoBehaviour
     private float _playerForceImpulse = 30;
     //public Transform enemigos;
 
-    void WaveAbility()
+    /*void WaveAbility()
     {
         Collider[] enemies = Physics.OverlapSphere(transform.position, maxDistance);
             foreach (Collider enemy in enemies)
@@ -241,15 +243,15 @@ public class PlayerController : MonoBehaviour
                     Debug.Log(force);
                 }
             }
-    }
+    }*/
 
-    IEnumerator ScaleAbility()
+    /*IEnumerator ScaleAbility()
     {
         Debug.Log("HOla");
         _playerSpeed = 20;
         yield return new WaitForSeconds(5);
         _playerSpeed = 5;
-    }
+    }*/
 
     /*void Dash()
     {
@@ -277,6 +279,17 @@ public class PlayerController : MonoBehaviour
         _controller.Move()
     }*/
 
+
+
+
+
+
+
+    //void TakeDamage(int Damage)
+    /*{
+        healthBar =- Damage;
+    }*/
+
     void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
@@ -284,8 +297,5 @@ public class PlayerController : MonoBehaviour
 
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireCube(_interactionPosition.position, _interactionRadius);
-
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(transform.position, maxDistance);
     }
 }

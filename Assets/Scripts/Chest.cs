@@ -2,6 +2,13 @@ using UnityEngine;
 
 public class Chest : MonoBehaviour, IInteractable
 {
+
+    PlayerPotions _playerPotions;
+
+    void Awake()
+    {
+        _playerPotions = _playerPotions = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerPotions>();
+    }
     void Update()
     {
         
@@ -9,9 +16,7 @@ public class Chest : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        GameManager.instance.HealthPotion(1);
-        Debug.Log("Health Potion: " + GameManager.instance.healthPotion);
-        GameManager.instance.ManaPotion(1);
-        Debug.Log("Health Potion: " + GameManager.instance.manaPotion);
+        _playerPotions.HealthPotion(1);
+        _playerPotions.ManaPotion(1);
     }
 }

@@ -114,7 +114,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "WaterWave",
+                    "name": "WaterAttack",
                     "type": "Button",
                     "id": "e546a312-0479-4f41-91ea-bded642a1f73",
                     "expectedControlType": "",
@@ -126,6 +126,15 @@
                     "name": "WaterState",
                     "type": "Button",
                     "id": "d5c9db09-3deb-458b-9bcc-2997b01a47fb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "FireState",
+                    "type": "Button",
+                    "id": "352f1999-5565-486e-bcd8-84fb3b3c157a",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -558,7 +567,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "WaterWave",
+                    "action": "WaterAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -570,6 +579,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "WaterState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fe84cc0a-339c-4e94-a639-3466170ed364",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "FireState",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
