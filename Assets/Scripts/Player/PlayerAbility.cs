@@ -22,20 +22,20 @@ public class PlayerAbility : MonoBehaviour
 
 
     //WaterAbilities
-    [Header("Ability1")]
+    [Header("DamageWater")]
     public float cooldownAbility1 = 15;
     public float currentCooldown1 = 15;
     public bool ability1Used = false;
     private float maxDistance = 10;
     private float _playerForceImpulse = 20;
 
-    [Header("Ability2")]
+    [Header("StateWater")]
     public float cooldownAbility2 = 10;
     public float currentCooldown2 = 10;
     public bool ability2Used = false;
 
     //FireAbilities
-    [Header("Ability3")]
+    [Header("StateFire")]
     public float cooldownAbility3 = 10;
     public float currentCooldown3 = 10;
     public int chargeAbility;

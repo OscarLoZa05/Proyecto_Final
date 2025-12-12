@@ -23,6 +23,9 @@ public class PlayerPotions : MonoBehaviour
     public int manaPotions = 0;
     public int healthPotions = 0;
 
+    public int healthPotionAmount = 25;
+    public int manaPotionAmount = 25;
+
     void Awake()
     {
         _playerController = GetComponent<PlayerController>();
@@ -57,7 +60,7 @@ public class PlayerPotions : MonoBehaviour
         {
             manaPotions += Count;
             manaText.text = "x " + manaPotions.ToString();
-            _playerController.currentManaBar += 30;
+            _playerController.currentManaBar += manaPotionAmount;
             _playerController.currentManaBar = Mathf.Clamp(_playerController.currentManaBar, 0, _playerController.maxManaBar);
             _playerAbil.UpdateManaBar();
             
@@ -76,7 +79,7 @@ public class PlayerPotions : MonoBehaviour
         {
             healthPotions += Count;
             healthText.text = "x " + healthPotions.ToString();
-            _playerController.currentHealthBar += 50;
+            _playerController.currentHealthBar += healthPotionAmount;
             _playerController.currentHealthBar = Mathf.Clamp(_playerController.currentHealthBar, 0, _playerController.maxHealthBar);
         }
         if(Count > 0)

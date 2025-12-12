@@ -202,7 +202,7 @@ public class PlayerController : MonoBehaviour
         Collider[] objectsToGrab = Physics.OverlapBox(_interactionPosition.position, _interactionRadius);
             foreach (Collider item in objectsToGrab)
             {
-                if(item.gameObject.layer == 7)
+                if(item.gameObject.layer == 6)
                 {
                     IInteractable interactableObject = item.GetComponent<IInteractable>();
                     if(interactableObject != null)
