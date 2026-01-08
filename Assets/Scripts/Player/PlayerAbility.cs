@@ -27,7 +27,8 @@ public class PlayerAbility : MonoBehaviour
     public float currentCooldown1 = 15;
     public bool ability1Used = false;
     private float maxDistance = 10;
-    private float _playerForceImpulse = 20;
+    private float playerForceImpulse = 20;
+    public float manaWasted1 = 15;
 
     [Header("StateWater")]
     public float cooldownAbility2 = 10;
@@ -140,14 +141,12 @@ public class PlayerAbility : MonoBehaviour
                     float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
                     float forceMultiplier = Mathf.Clamp01(1 - (distanceToEnemy / maxDistance));
 
-                    //float distanceNeeded = maxDistance - distanceToEnemy;
-                    //float impulseNeeded = (distanceNeeded)
                     directionToEnemy.y = 0;
 
                     Vector3 force = (directionToEnemy * forceMultiplier);
 
                     _enemyRigidBody.AddForce(0, 2, 0, ForceMode.Impulse);
-                    _enemyRigidBody.AddForce(force * _playerForceImpulse, ForceMode.Impulse);
+                    _enemyRigidBody.AddForce(force * playerForceImpulse, ForceMode.Impulse);
                     
 
                     Debug.Log(force);
@@ -199,7 +198,7 @@ public class PlayerAbility : MonoBehaviour
         float currentManaBar = _playerController.currentManaBar / _playerController.maxManaBar;
         manaBarImage.fillAmount = currentManaBar;
     }
-    
+
 
 
     void OnDrawGizmos()
