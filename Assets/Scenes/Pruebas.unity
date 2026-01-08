@@ -703,6 +703,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea4cc23e8c65c844d9b55e570fd86128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerPotions: {fileID: 2100811710}
 --- !u!65 &432810430
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3253,6 +3254,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5112517411175863983, guid: 2984bb2768dcb06448c03f948e4fde90, type: 3}
   m_PrefabInstance: {fileID: 712688580}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2100811710 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 418307537711763910, guid: 2984bb2768dcb06448c03f948e4fde90, type: 3}
+  m_PrefabInstance: {fileID: 712688580}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e12afe9a163dfa4e9e1821ea4644fa0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2142612105
 GameObject:
   m_ObjectHideFlags: 0
