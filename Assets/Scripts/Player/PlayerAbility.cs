@@ -199,6 +199,7 @@ public class PlayerAbility : MonoBehaviour
         float currentManaBar = _playerController.currentManaBar / _playerController.maxManaBar;
         manaBarImage.fillAmount = currentManaBar;
     }
+    
 
 
     void OnDrawGizmos()

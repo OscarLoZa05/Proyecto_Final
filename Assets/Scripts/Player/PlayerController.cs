@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     private InputAction _moveAction;
     private InputAction _jumpAction;
     private InputAction _interactAction;
-    //private InputAction _dashAction;
+    private InputAction _dashAction;
     
     //Movimiento 
     public float _playerSpeed = 5;
@@ -58,6 +58,18 @@ public class PlayerController : MonoBehaviour
     public float maxHealthBar = 100;
     public float currentHealthBar = 50;
 
+    
+    [Header("Dash Cooldown")]
+    [SerializeField] private float dashCooldown = 1.25f;
+    private bool isDashOnCooldown = false;
+    private Coroutine dashCooldownRoutine;
+
+    [Header("Dash")]
+    [SerializeField] private float _dashSpeed = 30;
+    [SerializeField] private float _dashTime = 0.25f;
+    private Vector3 _lastMoveDirection;
+    private bool isDashing = false;
+
     void Awake()
     {
         _controller = GetComponent<CharacterController>();
@@ -66,7 +78,7 @@ public class PlayerController : MonoBehaviour
         _moveAction = InputSystem.actions["Move"];
         _jumpAction = InputSystem.actions["Jump"];
         _interactAction = InputSystem.actions["Interact"];
-        //_dashAction = InputSystem.actions["Dash"];
+        _dashAction = InputSystem.actions["Dash"];
 
         _mainCamera = Camera.main.transform;
     }
@@ -83,10 +95,10 @@ public class PlayerController : MonoBehaviour
         {
             Interact();
         }
-        /*if(_dashAction.WasPressedThisFrame())
+        if(_dashAction.WasPressedThisFrame() && _moveValue != Vector2.zero && !isDashing && !isDashOnCooldown)
         {
-            Dash();
-        }*/
+            StartCoroutine(Dash());
+        }
         /*if(_ability1.WasPressedThisFrame())
         {
             WaveAbility();
@@ -106,6 +118,8 @@ public class PlayerController : MonoBehaviour
     private float _smoothSpeed = 0f;
     void Movement()
     {
+        if(isDashing) return;
+        
         Vector3 direction = new Vector3(_moveValue.x, 0, _moveValue.y);
 
 
@@ -138,6 +152,8 @@ public class PlayerController : MonoBehaviour
             targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _mainCamera.eulerAngles.y;
             float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, _smoothTime);
             transform.rotation = Quaternion.Euler(0, smoothAngle, 0);
+
+            _lastMoveDirection = (Quaternion.Euler(0, targetAngle, 0) * Vector3.forward).normalized;
         }
 
         Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
@@ -190,6 +206,30 @@ public class PlayerController : MonoBehaviour
             
             _playerGravity.y += _gravity * Time.deltaTime;
         }
+    }
+
+    IEnumerator Dash()
+    {
+        isDashing = true;
+        float timer = 0;
+
+        while(timer < _dashTime)
+        {
+            _controller.Move(_lastMoveDirection.normalized * _dashSpeed * Time.deltaTime);
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        
+        isDashing = false;
+        dashCooldownRoutine = StartCoroutine(DashCoolDown());
+    }
+
+    IEnumerator DashCoolDown()
+    {
+        isDashOnCooldown = true;
+        yield return new WaitForSecondsRealtime(dashCooldown);
+        isDashOnCooldown = false;
     }
 
     bool IsGrounded()
