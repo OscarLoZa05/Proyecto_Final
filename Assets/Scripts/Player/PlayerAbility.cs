@@ -11,7 +11,7 @@ public class PlayerAbility : MonoBehaviour
     private InputAction _ability1;
     private InputAction _ability2;
     private InputAction _ability3;
-
+    private InputAction _ability4;
     //Canvas
     [Header("Canvas")]
     public Image manaBarImage;
@@ -19,28 +19,39 @@ public class PlayerAbility : MonoBehaviour
     public Image imageAbility1;
     public Image imageAbility2;
     public Image imageAbility3;
+    public Image imageAbility4;
 
 
     //WaterAbilities
-    [Header("DamageWater")]
+    [Header("WAttack")]
     public float cooldownAbility1 = 15;
     public float currentCooldown1 = 15;
     public bool ability1Used = false;
     private float maxDistance = 10;
     private float playerForceImpulse = 20;
-    public float manaWasted1 = 15;
+    public int manaWasted1 = 15;
 
-    [Header("StateWater")]
+    [Header("WState")]
     public float cooldownAbility2 = 10;
     public float currentCooldown2 = 10;
     public bool ability2Used = false;
+    public int manaWasted2 = 25;
 
     //FireAbilities
-    [Header("StateFire")]
+    [Header("FState")]
     public float cooldownAbility3 = 10;
     public float currentCooldown3 = 10;
     public int chargeAbility;
     public bool ability3Used = false;
+    public int manaWasted3 = 50;
+
+    [Header("FAttack")]
+    public float cooldownAbility4 = 10;
+    public float currentCooldown4 = 10;
+    public bool ability4Used = false;
+    [SerializeField] private Vector3 hitboxLocalOffset = new Vector3(0f, 1f, 3f);
+    [SerializeField] private Vector3 hitboxSize = new Vector3(5f, 4f, 10f); 
+    public int manaWasted4 = 50;
 
 
     PlayerController _playerController;
@@ -52,6 +63,7 @@ public class PlayerAbility : MonoBehaviour
         _ability1 = InputSystem.actions["WaterAttack"];
         _ability2 = InputSystem.actions["WaterState"];
         _ability3 = InputSystem.actions["FireState"];
+        _ability4 = InputSystem.actions["FireAttack"];
     }
 
     // Update is called once per frame
@@ -60,29 +72,36 @@ public class PlayerAbility : MonoBehaviour
 
         //fireAttackRange  = transform.rotation * rangeAttack;
 
-        if(_ability1.WasPressedThisFrame() && ability1Used == false && _playerController.currentManaBar >= 15)
+        if(_ability1.WasPressedThisFrame() && ability1Used == false && _playerController.currentManaBar >= manaWasted1)
         {
-            WaveAttack();
-            ManaUsed(15);
+            WAttack();
+            ManaUsed(manaWasted1);
             ability1Used = true;
             currentCooldown1 = 0;
             imageAbility1.fillAmount = 0;
         }
-        if(_ability2.WasPressedThisFrame() && ability2Used == false && _playerController.currentManaBar >= 20)
+        if(_ability2.WasPressedThisFrame() && ability2Used == false && _playerController.currentManaBar >= manaWasted2)
         {
-            StartCoroutine(WaterState());
-            ManaUsed(25);
+            StartCoroutine(WState());
+            ManaUsed(manaWasted2);
             ability2Used = true;
             currentCooldown2 = 0;
             imageAbility2.fillAmount = 0;
         }
-        if(_ability3.WasPressedThisFrame() && ability3Used == false && _playerController.currentManaBar >= 50)
+        if(_ability3.WasPressedThisFrame() && ability3Used == false && _playerController.currentManaBar >= manaWasted3)
         {
-            StartCoroutine(FireState());
-            ManaUsed(50);
+            StartCoroutine(FState());
+            ManaUsed(manaWasted3);
             ability3Used = true;
             currentCooldown3 = 0;
             imageAbility3.fillAmount = 0;
+        }
+        if(_ability4.WasPressedThisFrame() && ability4Used == false && _playerController.currentManaBar >= manaWasted4)
+        {
+            Debug.Log("Hola");
+            ManaUsed(manaWasted4);
+            ability4Used = true;
+            currentCooldown4 = 0;
         }
 
         if(ability1Used)
@@ -124,9 +143,22 @@ public class PlayerAbility : MonoBehaviour
                 ability3Used = false;
             }
         }
+        if(ability4Used)
+        {
+            currentCooldown4 += Time.deltaTime;
+
+            float progressAbility4 = currentCooldown4 / cooldownAbility4;
+
+            imageAbility4.fillAmount = progressAbility4;
+
+            if(currentCooldown4 >= cooldownAbility4)
+            {
+                ability4Used = false;
+            }
+        }
     }
 
-    void WaveAttack()
+    void WAttack()
     {
         Debug.Log("Habilidad 1 Usada");
         Collider[] enemies = Physics.OverlapSphere(transform.position, maxDistance);
@@ -154,7 +186,7 @@ public class PlayerAbility : MonoBehaviour
             }
     }
 
-    IEnumerator WaterState()
+    IEnumerator WState()
     {
         Debug.Log("Habilidad 2 Usada");
         _playerController._playerSpeed = 20;
@@ -162,6 +194,16 @@ public class PlayerAbility : MonoBehaviour
         _playerController._playerSpeed = 5;
     }
 
+    void FAttack()
+    {
+        Vector3 hitboxWorldCenter = transform.TransformPoint(hitboxLocalOffset);
+
+        Collider[] enemies = Physics.OverlapBox(hitboxWorldCenter, hitboxSize * 0.5f, transform.rotation);
+            foreach (Collider enemy in enemies)
+            {
+                Debug.Log("Hola");
+            }
+    }
     /*void FireAttack()
     {
 
@@ -176,7 +218,7 @@ public class PlayerAbility : MonoBehaviour
             }
     }*/
 
-    IEnumerator FireState()
+    IEnumerator FState()
     {
         for (chargeAbility = 0; chargeAbility <= 4; chargeAbility++)
         {
@@ -203,7 +245,12 @@ public class PlayerAbility : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.white;
+        Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, maxDistance);
+
+        Gizmos.color = Color.red;
+        Gizmos.matrix = transform.localToWorldMatrix;
+        Gizmos.DrawWireCube(hitboxLocalOffset, hitboxSize);
+
     }
 }
