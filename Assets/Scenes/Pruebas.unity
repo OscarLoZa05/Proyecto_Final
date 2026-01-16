@@ -392,7 +392,7 @@ MonoBehaviour:
   TargetOffset: {x: 0, y: 0, z: 0}
   Damping: {x: 0.5, y: 0.5}
   Lookahead:
-    Enabled: 0
+    Enabled: 1
     Time: 0
     Smoothing: 0
     IgnoreY: 0
@@ -510,8 +510,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 331823834}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.25340137, y: 0.000000034070133, z: -0.000000008601411, w: 0.9673613}
-  m_LocalPosition: {x: -5.79, y: 4.25, z: -3.59}
+  m_LocalRotation: {x: 0.25340128, y: -0.000000021939464, z: 0.000000005451035, w: 0.9673613}
+  m_LocalPosition: {x: -17.09, y: 4.25, z: -9.940001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1160,7 +1160,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5112517411175863983, guid: 2984bb2768dcb06448c03f948e4fde90, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.79
+      value: -17.09
       objectReference: {fileID: 0}
     - target: {fileID: 5112517411175863983, guid: 2984bb2768dcb06448c03f948e4fde90, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1168,7 +1168,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5112517411175863983, guid: 2984bb2768dcb06448c03f948e4fde90, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.41
+      value: -5.94
       objectReference: {fileID: 0}
     - target: {fileID: 5112517411175863983, guid: 2984bb2768dcb06448c03f948e4fde90, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1551,8 +1551,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1077464746}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2534014, y: 0.00000003416106, z: -0.000000008948529, w: 0.9673612}
-  m_LocalPosition: {x: -5.79, y: 4.25, z: -3.59}
+  m_LocalRotation: {x: 0.25340128, y: -0.000000022022721, z: 0.0000000057688747, w: 0.9673613}
+  m_LocalPosition: {x: -17.09, y: 4.25, z: -9.940001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1740,6 +1740,127 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1157864497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1157864501}
+  - component: {fileID: 1157864500}
+  - component: {fileID: 1157864502}
+  - component: {fileID: 1157864498}
+  m_Layer: 0
+  m_Name: Third Person Aim Camera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1157864498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157864497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2588cc5dedbb75e49a44aada63f7b939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AimCollisionFilter:
+    serializedVersion: 2
+    m_Bits: 1
+  IgnoreTag: 
+  AimDistance: 200
+  NoiseCancellation: 1
+--- !u!114 &1157864500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157864497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Priority:
+    Enabled: 0
+    m_Value: 0
+  OutputChannel: 1
+  StandbyUpdate: 2
+  m_StreamingVersion: 20241001
+  m_LegacyPriority: 0
+  Target:
+    TrackingTarget: {fileID: 2100811709}
+    LookAtTarget: {fileID: 0}
+    CustomLookAtTarget: 0
+  Lens:
+    FieldOfView: 70.9
+    OrthographicSize: 5
+    NearClipPlane: 0.3
+    FarClipPlane: 1000
+    Dutch: 0
+    ModeOverride: 0
+    PhysicalProperties:
+      GateFit: 2
+      SensorSize: {x: 21.946, y: 16.002}
+      LensShift: {x: 0, y: 0}
+      FocusDistance: 10
+      Iso: 200
+      ShutterSpeed: 0.005
+      Aperture: 16
+      BladeCount: 5
+      Curvature: {x: 2, y: 11}
+      BarrelClipping: 0.25
+      Anamorphism: 0
+  BlendHint: 0
+--- !u!4 &1157864501
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157864497}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -15.55, y: 4.36, z: -11.55}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1157864502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157864497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625c14eee3ad46c99df7c7c891ef668a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Damping: {x: 0.1, y: 0.5, z: 0.3}
+  ShoulderOffset: {x: 1.54, y: 0.93, z: -3.61}
+  VerticalArmLength: 1.43
+  CameraSide: 1
+  CameraDistance: 2
+  AvoidObstacles:
+    Enabled: 0
+    CollisionFilter:
+      serializedVersion: 2
+      m_Bits: 1
+    IgnoreTag: 
+    CameraRadius: 0.2
+    DampingIntoCollision: 0
+    DampingFromCollision: 0.5
 --- !u!1 &1310868887 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6006430429249909556, guid: 2984bb2768dcb06448c03f948e4fde90, type: 3}
@@ -3309,10 +3430,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 320c9a9097d1c4e42b4458feed4a49b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 20
+  _detectionRange: 25
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
+  lookAheadDistance: 2.5
+  lookHeight: 1.6
+  distanceOfEnemyLocked: 0
 --- !u!4 &2125874563 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7549512980647718051, guid: 2984bb2768dcb06448c03f948e4fde90, type: 3}
@@ -3450,3 +3574,4 @@ SceneRoots:
   - {fileID: 712688580}
   - {fileID: 331823840}
   - {fileID: 263647892}
+  - {fileID: 1157864501}
