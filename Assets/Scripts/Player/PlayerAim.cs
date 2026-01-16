@@ -3,30 +3,31 @@ using UnityEngine.InputSystem;
 
 public class RaycastToEnemy : MonoBehaviour
 {
-    [SerializeField] private float range = 10f;
+    [SerializeField] private float _detectionRange = 10f;
     [SerializeField] private LayerMask enemyLayer;
 
-    private InputAction Fijar;
+    private InputAction _lockAction;
 
-    private Transform target;
+    [SerializeField] private Transform _enemyTarget;
 
     void Awake()
     {
-        Fijar = InputSystem.actions["Lock"];
+        _lockAction = InputSystem.actions["Lock"];
+        enemyLayer = LayerMask.GetMask("Enemy");
     }
 
     void Update()
     {
-        if(Fijar.WasPressedThisFrame())
+        if(_lockAction.WasPressedThisFrame())
         {
             FindClosestEnemy();
             
-            if (target == null)
+            if (_enemyTarget == null)
             return;
 
-            Vector3 direction = (target.position - transform.position).normalized;
+            Vector3 directionToEnemy = (_enemyTarget.position - transform.position).normalized;
 
-            if (Physics.Raycast(transform.position, direction, out RaycastHit hit, range, enemyLayer))
+            if (Physics.Raycast(transform.position, directionToEnemy, out RaycastHit hit, _detectionRange, enemyLayer))
             {
                 Debug.Log("Raycast ha golpeado a: " + hit.collider.name);
             }
@@ -38,10 +39,10 @@ public class RaycastToEnemy : MonoBehaviour
 
     void FindClosestEnemy()
     {
-        Collider[] enemies = Physics.OverlapSphere(transform.position, range, enemyLayer);
+        Collider[] enemies = Physics.OverlapSphere(transform.position, _detectionRange, enemyLayer);
 
         float minDist = float.MaxValue;
-        target = null;
+        _enemyTarget = null;
 
         for (int i = 0; i < enemies.Length; i++)
         {
@@ -50,7 +51,7 @@ public class RaycastToEnemy : MonoBehaviour
             if (dist < minDist)
             {
                 minDist = dist;
-                target = enemies[i].transform;
+                _enemyTarget = enemies[i].transform;
             }
         }
     }
@@ -58,12 +59,12 @@ public class RaycastToEnemy : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, range);
+        Gizmos.DrawWireSphere(transform.position, _detectionRange);
 
-        if (target != null)
+        if (_enemyTarget != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, target.position);
+            Gizmos.DrawLine(transform.position, _enemyTarget.position);
         }
     }
 }
